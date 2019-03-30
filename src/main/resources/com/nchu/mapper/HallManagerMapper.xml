@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nchu.mapper.HallManagerMapper">
+    <insert id="add" parameterType="com.nchu.entity.HallManager">
+          insert  into hall_manager values (#{hallManagerId},#{hallManagerName},#{hallManagerPassword});
+
+    </insert>
+    <select id="query" resultType="com.nchu.entity.HallManager" parameterType="com.nchu.entity.HallManager">
+        select * from hall_manager where hall_manager_id=#{hallManagerId} and hall_manager_password=#{hallManagerPassword}
+
+    </select>
+    <select id="queryAll" resultType="com.nchu.entity.HallManager">
+        select * from hall_manager
+    </select>
+    <select id="select" resultType="com.nchu.entity.HallManager" parameterType="com.nchu.entity.HallManager">
+
+        select * from hall_manager
+        <where>
+            <if test="hallManagerId!=null and hallManagerId!=''">
+                and hall_manager_id = #{hallManagerId}
+            </if>
+            <if test="hallManagerName!=null and hallManagerName!=''">
+                and hall_manager_name = #{hallManagerName}
+            </if>
+            <if test="hallManagerPassword!=null and hallManagerPassword!=''">
+                and hall_manager_password = #{hallManagerPassword}
+            </if>
+        </where>
+    </select>
+
+    <!--按账号删除-->
+    <delete id="delete" parameterType="com.nchu.entity.HallManager">
+        delete  from  hall_manager where hall_manager_id=#{hallManagerId}
+    </delete>
+
+    <!--修改-->
+    <update id="update" parameterType="com.nchu.entity.HallManager">
+        update hall_manager
+        <set>
+            <if test="hallManagerId!=null and hallManagerId!=''">
+                hall_manager_id = #{hallManagerId},
+            </if>
+            <if test="hallManagerName!=null and hallManagerName!=''">
+                hall_manager_name = #{hallManagerName},
+            </if>
+            <if test="hallManagerPassword!=null and hallManagerPassword!=''">
+                hall_manager_password = #{hallManagerPassword},
+            </if>
+        </set>
+        where hall_manager_id = #{hallManagerId}
+    </update>
+</mapper>

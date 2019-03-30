@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nchu.mapper.StudentLogMapper">
+    <insert id="insert" parameterType="com.nchu.entity.StudentLog">
+        insert into student_log
+        values (
+        #{studentLog.studentId},#{studentLog.computerId},
+        #{studentLog.ip},#{studentLog.startTime},
+        #{studentLog.endTime},#{studentLog.isfree})
+
+    </insert>
+    <update id="offComputerUpdate" parameterType="string">
+
+        update student_log
+        <set>
+                end_time=now()
+        </set>
+        where computer_id=#{computerId} and end_time is null
+    </update>
+    <update id="offComputerAll">
+        update student_log
+        set end_time=now()
+        where end_time is null and computer_id in(
+        select computer_id from hall
+        where hall_id=#{hallId}
+        )
+
+    </update>
+    <update id="changeComputer">
+        update student_log
+        set computer_id=#{computerId2}
+        where computer_id=#{computerId1} and end_time is null;
+    </update>
+
+    <select id="queryAll" resultType="com.nchu.entity.StudentLog">
+        select * from student_log;
+    </select>
+    <select id="queryStudentId" resultType="com.nchu.entity.StudentLog">
+        select * from student_log
+         where computer_id = #{computerId}
+                and end_time =null;
+    </select>
+
+    <select id="query" resultType="com.nchu.entity.StudentLog">
+        select * from v_student_login_log
+        <where>
+            <if test="studentLog.studentId!=null and studentLog.studentId!=''">
+                and student_id=#{studentLog.studentId}
+            </if>
+            <if test="studentName!=null and studentName!=''">
+                and student_name=#{studentName}
+            </if>
+            <if test="studentLog.startTime!=null">
+                and start_time >=#{studentLog.startTime}
+            </if>
+            <if test="studentLog.endTime!=null">
+                and end_time &lt;=#{studentLog.endTime}
+            </if>
+            <if test="hallId!=null and hallId!=''">
+                and computer_id like CONCAT('%',#{hallId},'%')
+            </if>
+            <if test="studentLog.computerId!=null and studentLog.computerId!=''">
+                and computer_id=#{studentLog.computerId}
+            </if>
+        </where>
+    </select>
+    <select id="getStudentNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM student_log
+        WHERE   (UNIX_TIMESTAMP(start_time))<![CDATA[ >= ]]> #{ms}
+        AND (UNIX_TIMESTAMP(start_time)) <![CDATA[ <= ]]> 24*60*60+#{ms}
+        AND (UNIX_TIMESTAMP(end_time)) <![CDATA[ >= ]]> #{ms}
+        AND (UNIX_TIMESTAMP(start_time)) <![CDATA[ <= ]]> 24*60*60+#{ms}
+        AND computer_id IN(SELECT computer_id FROM computer
+        WHERE hall_id=#{hallId});
+    </select>
+    <select id="getStudy" resultType="java.lang.Integer">
+        select count(*) from student
+        where total_time/dafault_time <![CDATA[ >= ]]> #{i}-0.2
+        AND total_time/dafault_time <![CDATA[ < ]]> #{i}
+        and student_class=#{clazz}
+    </select>
+</mapper>

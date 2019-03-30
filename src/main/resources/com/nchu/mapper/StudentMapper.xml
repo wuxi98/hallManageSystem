@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nchu.mapper.StudentMapper">
+    <insert id="insert" parameterType="com.nchu.entity.Student">
+        insert into student(student_id, student_name, student_class,dafault_time,total_time)
+        values (#{studentId},#{studentName},#{studentClass},#{defaultTime},#{totalTime})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.nchu.entity.Student">
+        update student
+        <set>
+            <if test="studentId!=null and studentId!=''" >
+                student_id=#{studentId},
+            </if>
+            <if test="studentName!=null and studentName!=''" >
+                student_name=#{studentName},
+            </if>
+            <if test="studentClass!=null and studentClass!=''" >
+                student_class=#{studentClass},
+            </if>
+            <if test="defaultTime!=null and defaultTime!=''" >
+                default_time=#{defaultTime},
+            </if>
+            <if test="totalTime!=null and totalTime!=''" >
+                total_time=#{totalTime},
+            </if>
+        </set>
+        where  student_id=#{studentId}
+    </update>
+    <select id="queryAll" resultType="com.nchu.entity.Student">
+        select * from student
+    </select>
+    <select id="selectByPrimaryKey" resultType="com.nchu.entity.Student">
+        select * from student
+        where
+        student_id = #{StudentId}
+    </select>
+    <select id="studentStatus" resultType="int">
+        select count(*) from student_log
+        where student_id=#{studentId} and end_time is null
+    </select>
+
+    <select id="query" resultType="com.nchu.entity.Student" parameterType="com.nchu.entity.Student">
+        select * from student
+        <where>
+            <if test="studentId!=null and studentId!=''">
+                and student_id = #{studentId}
+            </if>
+            <if test="studentName!=null and studentName!=''">
+                and student_name = #{studentName}
+            </if>
+            <if test="studentClass!=null and studentClass!=''">
+                and student_class = #{studentClass}
+            </if>
+        </where>
+    </select>
+    <select id="login" resultType="com.nchu.entity.Student" parameterType="com.nchu.entity.Student">
+        select * from student where student_id=#{studentId} and student_password=#{studentPassword}
+    </select>
+
+
+    <delete id="delete">
+        delete from student
+        <where>
+            student_class = #{studentClass}
+            <if test="studentId!=null and studentId!=''">
+                and student_id = #{studentId}
+            </if>
+        </where>
+    </delete>
+</mapper>

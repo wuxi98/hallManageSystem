@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nchu.mapper.HallMapper">
+    <insert id="insert" parameterType="com.nchu.entity.Hall">
+        insert into hall (hall_id, row, col, computer_number, leader, hardware_info, software_info)
+        values (#{hallId},#{row},#{col},#{computerNumber},#{leader},#{hardwareInfo},#{softwareInfo})
+    </insert>
+
+    <select id="queryAll" resultType="com.nchu.entity.Hall">
+        select * from hall
+    </select>
+    <select id="selectAllHallId" resultType="string">
+        select hall_id from hall;
+    </select>
+
+    <update id="update" parameterType="com.nchu.entity.Hall">
+        update hall
+        <set>
+
+            <if test="row!=null">
+                row=#{row},
+            </if>
+            <if test="col!=null">
+                col=#{col},
+            </if>
+            <if test="computerNumber!=null">
+                computer_number=#{computerNumber},
+            </if>
+            <if test="leader!=null and leader!=''">
+                leader=#{leader},
+            </if>
+            <if test="hardwareInfo!=null and hardwareInfo!=''">
+                hardware_info=#{hardwareInfo},
+            </if>
+            <if test="softwareInfo!=null and softwareInfo!=''">
+                software_info=#{softwareInfo},
+            </if>
+        </set>
+        <where>
+            hall_id=#{hallId}
+        </where>
+    </update>
+    <delete id="delete" parameterType="com.nchu.entity.Hall">
+        delete  from  hall where hall_id=#{hallId}
+    </delete>
+    <select id="query" resultType="com.nchu.entity.Hall" parameterType="com.nchu.entity.Hall">
+        select *  from hall
+        <where>
+            <if test="hallId!=null and hallId!=''">
+                and hall_id=#{hallId}
+            </if>
+            <if test="computerNumber!=null">
+                and computer_number>=#{computerNumber},
+            </if>
+            <if test="leader!=null and leader!=''">
+                and leader=#{leader}
+            </if>
+        </where>
+    </select>
+
+</mapper>

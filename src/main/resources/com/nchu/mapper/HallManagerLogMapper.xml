@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nchu.mapper.HallManagerLogMapper">
+    <select id="loadHallManagerLog" resultType="com.nchu.entity.HallManagerLog"
+            parameterType="com.nchu.entity.HallManagerLog">
+        select * from v_hall_manager_login_log
+        <where>
+            <if test="hallManagerLog.hallManagerId!=null and hallManagerLog.hallManagerId!=''">
+                and hallManager_id=#{hallManagerLog.hallManagerId}
+            </if>
+            <if test="hallManagerName!=null and hallManagerName!=''">
+                and hallManager_name=#{hallManagerName}
+            </if>
+            <if test="hallManagerLog.startTime!=null">
+                and start_time >=#{hallManagerLog.startTime}
+            </if>
+            <if test="hallManagerLog.finishTime!=null">
+                and finish_time &lt;=#{hallManagerLog.finishTime}
+            </if>
+        </where>
+    </select>
+</mapper>
